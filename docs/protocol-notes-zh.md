@@ -43,10 +43,10 @@ length_le16 | message_id_u8 | payload | checksum_le16
 
 ## 认证和会话
 
-PIN 在认证请求中以 little-endian 16 位形式出现。例如示例 PIN `1234` 表现为：
+PIN 在认证请求中以四位显示数字的十六进制/BCD 风格放入 16 位 little-endian 字段。例如示例 PIN `1234` 表现为：
 
 ```text
-d2 04
+34 12
 ```
 
 常见认证/会话请求：

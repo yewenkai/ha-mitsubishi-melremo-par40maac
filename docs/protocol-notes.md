@@ -43,10 +43,10 @@ Where:
 
 ## Authentication And Session
 
-The PIN appears in authentication requests as a 16-bit little-endian value. For example, sample PIN `1234` is encoded as:
+The PIN appears in authentication requests as a 16-bit little-endian value using a hex/BCD-like representation of the four displayed digits. For example, sample PIN `1234` is encoded as:
 
 ```text
-d2 04
+34 12
 ```
 
 Common authentication/session requests:
