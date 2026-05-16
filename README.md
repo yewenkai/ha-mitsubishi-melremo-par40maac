@@ -114,6 +114,30 @@ Do not commit a real `secrets.yaml` file.
 
 If the PIN was changed, always use the PIN currently shown by the panel.
 
+## Practical Use Cases
+
+After the air conditioner is available as a Home Assistant climate entity, it can be combined with other Home Assistant integrations and automations.
+
+### Siri And Apple Home
+
+With the Home Assistant HomeKit Bridge integration, the air conditioner entity can be exposed to Apple Home. After that, Siri can be used for commands such as turning the air conditioner on or off, subject to how the entity is named and exposed in HomeKit Bridge.
+
+If there is an Apple TV, HomePod, or similar Apple home hub in the home, the Apple Home app on iPhone can usually control the air conditioner remotely through Apple's HomeKit remote access. Another option is to expose Home Assistant securely to the internet, for example through a VPN, HTTPS reverse proxy, or another trusted remote access method, and then control the air conditioner through Home Assistant while away from home.
+
+Avoid exposing Home Assistant directly to the public internet without authentication, HTTPS, and proper network protection.
+
+### Simple Temperature Automation
+
+This integration can also work with a temperature sensor, such as a Mijia thermometer already connected to Home Assistant, to build simple comfort automations.
+
+For example:
+
+- When the iPhone is detected at home, it is nighttime, and the room temperature stays above a configured threshold for a period of time, Home Assistant can turn on the air conditioner automatically to avoid waking up from heat.
+- When turning on the air conditioner, Home Assistant can also turn off an existing Mijia fan or another fan that is already connected to Home Assistant.
+- If the room temperature becomes too low for a period of time, Home Assistant can turn the air conditioner off automatically, although this may not be necessary in every home.
+
+Treat these automations as examples only. Tune thresholds, delays, and safety conditions for your own room, sensor placement, and air conditioner behavior.
+
 ## Key Protocol Fixes
 
 The original integration structure is reusable, but the tested `PAR-40MAAC` panel uses different low-level frame details:
