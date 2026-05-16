@@ -1,0 +1,14 @@
+services:
+  esphome:
+    image: ghcr.io/esphome/esphome:latest
+    container_name: esphome
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - ./:/config
+      - /etc/localtime:/etc/localtime:ro
+    # If you plug the ESP32-S3-Dongle into this Linux host and want the
+    # container to flash through USB directly, uncomment the matching device.
+    # devices:
+    #   - /dev/ttyACM0:/dev/ttyACM0
+    #   - /dev/ttyUSB0:/dev/ttyUSB0
