@@ -13,7 +13,7 @@
 - Mitsubishi Electric `PAR-40MAAC`
 - BLE 名称形如 `M/RC_40MAAC_XXXXXXXXXXXX`
 - MELRemo 可正常连接和控制的面板
-- PIN 可通过面板显示，本项目测试时使用 `7777`
+- PIN 可通过面板显示，安装时填写自己面板上的 PIN
 
 可能兼容但未验证：
 
