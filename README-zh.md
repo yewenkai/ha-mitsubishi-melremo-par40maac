@@ -27,6 +27,10 @@
 - MELRemo 可正常连接和控制的面板
 - PIN 可通过面板显示，安装时填写自己面板上的 PIN
 
+面板参考页面：
+
+- [PAR-40MAA wall mounted controller - Mitsubishi Electric Australia](https://www.mitsubishielectric.com.au/product/par-40maa-wall-mounted-controller/)
+
 可能兼容但未验证：
 
 - `PAR-4*MA`
@@ -155,6 +159,18 @@ tools/melremo_capture/decode_frames.py captures/melremo/att.tsv > captures/melre
 ```
 
 注意：抓包文件可能包含设备地址、PIN 或其他隐私信息，默认不要公开上传。
+
+## 相关项目
+
+本项目属于 Mitsubishi Electric MELRemo / MA Remote 蓝牙本地控制路线，区别于 MELCloud 云端控制、CN105 主板串口控制和红外遥控方案。
+
+- [cyaneous/hass-mitsubishi_matouch](https://github.com/cyaneous/hass-mitsubishi_matouch)：本项目直接借鉴并修改的 Home Assistant 集成框架，面向 Mitsubishi MA Touch BLE thermostats。
+- [Home Assistant MELCloud](https://www.home-assistant.io/integrations/melcloud/)：官方 Home Assistant 集成，适用于 MELCloud enabled devices，依赖 MELCloud 生态。
+- [pymitsubishi/homeassistant-mitsubishi](https://github.com/pymitsubishi/homeassistant-mitsubishi)：面向 MAC-577IF-2E / MAC-587 Wi-Fi adapter 的本地网络控制方案。
+- [echavet/MitsubishiCN105ESPHome](https://github.com/echavet/MitsubishiCN105ESPHome)：通过 ESPHome + CN105 串口直连空调内机主板的方案。
+- 红外遥控方案：如 [BroadLink](https://www.home-assistant.io/integrations/broadlink/) / ESPHome IR，部署简单，但通常无法可靠读取空调真实状态。
+
+本项目的重点是：在不拆内机、不依赖 MELCloud 的情况下，通过 MELRemo 蓝牙协议接入支持 BLE 的 MA Remote 面板，并将其暴露为 Home Assistant climate 实体。
 
 ## 排障要点
 

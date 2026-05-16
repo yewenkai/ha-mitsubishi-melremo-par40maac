@@ -27,6 +27,10 @@ Verified:
 - Panels that can be connected and controlled by MELRemo
 - The PIN is shown on the panel and must be entered during setup
 
+Panel reference:
+
+- [PAR-40MAA wall mounted controller - Mitsubishi Electric Australia](https://www.mitsubishielectric.com.au/product/par-40maa-wall-mounted-controller/)
+
 Possibly compatible but not verified:
 
 - `PAR-4*MA`
@@ -171,6 +175,18 @@ See:
 - [中文协议笔记](docs/protocol-notes-zh.md)
 - [中文开发日志](docs/development-log-zh.md)
 - [中文抓包说明](tools/melremo_capture/README-zh.md)
+
+## Related Work
+
+This project follows the Mitsubishi Electric MELRemo / MA Remote local Bluetooth control path. It is different from MELCloud cloud control, CN105 indoor-unit serial control, and infrared remote-control solutions.
+
+- [cyaneous/hass-mitsubishi_matouch](https://github.com/cyaneous/hass-mitsubishi_matouch): the Home Assistant integration framework directly referenced and modified by this project, targeting Mitsubishi MA Touch BLE thermostats.
+- [Home Assistant MELCloud](https://www.home-assistant.io/integrations/melcloud/): the official Home Assistant integration for MELCloud enabled devices. It depends on the MELCloud ecosystem.
+- [pymitsubishi/homeassistant-mitsubishi](https://github.com/pymitsubishi/homeassistant-mitsubishi): a local network control approach for Mitsubishi MAC-577IF-2E / MAC-587 Wi-Fi adapter based installations.
+- [echavet/MitsubishiCN105ESPHome](https://github.com/echavet/MitsubishiCN105ESPHome): an ESPHome + CN105 serial-port approach that connects directly to the indoor unit control board.
+- Infrared remote-control solutions, such as [BroadLink](https://www.home-assistant.io/integrations/broadlink/) or ESPHome IR, are easier to deploy but usually cannot reliably read the air conditioner's real state.
+
+The focus of this project is to integrate BLE-capable MA Remote panels through the MELRemo Bluetooth protocol without opening the indoor unit and without depending on MELCloud, then expose the panel as a Home Assistant climate entity.
 
 ## Troubleshooting
 
