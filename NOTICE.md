@@ -15,6 +15,8 @@ This repository adds and documents changes verified against a Mitsubishi Electri
 - unsolicited response tolerance and protocol debug logging
 - ESPHome Bluetooth Proxy example
 - iPhone/Mac MELRemo BLE capture helpers
-- Chinese documentation and troubleshooting notes
+- English and Chinese documentation and troubleshooting notes
 
 Protocol analysis and implementation updates were completed with the assistance of Codex and OpenAI.
+
+This project is intended for non-commercial learning, research, interoperability, and personal automation on authorized equipment only. It is not affiliated with Mitsubishi Electric and must not be used to access, interfere with, bypass security controls on, or impair any system without explicit authorization.

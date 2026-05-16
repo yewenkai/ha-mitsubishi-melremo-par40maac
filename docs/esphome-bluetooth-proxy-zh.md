@@ -1,5 +1,7 @@
 # ESPHome 蓝牙中继说明
 
+[English](esphome-bluetooth-proxy.md)
+
 本项目可以通过 ESPHome Bluetooth Proxy 让 Home Assistant 间接连接 `PAR-40MAAC` 面板。
 
 ## 硬件

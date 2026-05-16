@@ -1,5 +1,7 @@
 # 开发日志
 
+[English](development-log.md)
+
 ## 2026-05-16
 
 ### 背景
@@ -63,7 +65,7 @@
 - Home Assistant 自定义集成
 - ESPHome 蓝牙中继配置
 - iPhone/Mac 抓包工具
-- 中文说明和协议笔记
+- 英文默认文档和中文 `-zh` 文档
 
 ### 隐私处理
 

@@ -1,75 +1,87 @@
 # Mitsubishi MELRemo PAR-40MAAC for Home Assistant
 
-这是一个用于 Home Assistant 的三菱电机有线面板蓝牙控制实验项目，目标是通过 MELRemo（也常被写作 MEL Remo）蓝牙协议控制空调。
+[中文说明](README-zh.md)
 
-本项目基于并借鉴了 [cyaneous/hass-mitsubishi_matouch](https://github.com/cyaneous/hass-mitsubishi_matouch) 的 Home Assistant 集成框架，在实际 `PAR-40MAAC` 面板和 MELRemo iPhone 抓包基础上修正了底层帧格式，使其可通过 Home Assistant + ESPHome Bluetooth Proxy 控制空调。
+This is an experimental Home Assistant custom integration for controlling Mitsubishi Electric wired controller panels over Bluetooth through the MELRemo, also written as MEL Remo, protocol.
 
-项目由用户实际设备调试，并在 Codex 与 OpenAI 协助下完成协议分析、代码修正和文档整理。
+The project is based on and derived from [cyaneous/hass-mitsubishi_matouch](https://github.com/cyaneous/hass-mitsubishi_matouch). It keeps the original Home Assistant integration structure and applies protocol fixes verified with a real `PAR-40MAAC` panel and MELRemo iPhone BLE captures, so the air conditioner can be controlled through Home Assistant and an ESPHome Bluetooth Proxy.
 
-## 已验证设备
+The protocol analysis, code changes, and documentation were completed on real hardware with assistance from Codex and OpenAI.
 
-已验证：
+## Disclaimer
+
+This project is provided for non-commercial learning, research, interoperability, and personal automation on equipment you own or are authorized to operate.
+
+It is not affiliated with, endorsed by, sponsored by, or supported by Mitsubishi Electric or any of its affiliates. Mitsubishi Electric, MELRemo, MEL Remo, MA Touch, and related names may be trademarks of their respective owners.
+
+Do not use this project to access, interfere with, damage, bypass security controls on, or operate any computer system, building system, HVAC system, Bluetooth device, or network that you do not own or have explicit permission to use. This project is not intended to attack, intrude into, or impair Mitsubishi Electric systems or any third-party system.
+
+The software is provided as-is, without warranty. You are responsible for complying with local laws, safety requirements, device warranty terms, building management rules, and any applicable service terms. HVAC control can affect comfort, energy usage, and equipment operation; use it carefully.
+
+## Verified Hardware
+
+Verified:
 
 - Mitsubishi Electric `PAR-40MAAC`
-- BLE 名称形如 `M/RC_40MAAC_XXXXXXXXXXXX`
-- MELRemo 可正常连接和控制的面板
-- PIN 可通过面板显示，安装时填写自己面板上的 PIN
+- BLE name in the form `M/RC_40MAAC_XXXXXXXXXXXX`
+- Panels that can be connected and controlled by MELRemo
+- The PIN is shown on the panel and must be entered during setup
 
-可能兼容但未验证：
+Possibly compatible but not verified:
 
 - `PAR-4*MA`
 - `PAR-4*MAAC`
-- 其他支持 MELRemo 的 Mitsubishi MA Touch / MA remote 面板
+- Other Mitsubishi MA Touch / MA remote panels supported by MELRemo
 
-如果你的设备能被 MELRemo 搜到，并且 Home Assistant 能通过蓝牙看到 `0277df18-e796-11e6-bf01-fe55135034f3` 服务 UUID，可以尝试本项目。
+If your device is visible in MELRemo and Home Assistant can see the service UUID `0277df18-e796-11e6-bf01-fe55135034f3`, this integration may be worth trying.
 
-## 项目结构
+## Repository Layout
 
 ```text
-custom_components/mitsubishi_matouch/  Home Assistant 自定义集成
-esphome/                               ESP32-S3 蓝牙中继示例配置
-tools/melremo_capture/                 iPhone + Mac 抓取 MELRemo BLE 日志的工具
-docs/                                  开发日志、协议笔记和排障说明
+custom_components/mitsubishi_matouch/  Home Assistant custom integration
+esphome/                               ESP32-S3 Bluetooth Proxy example
+tools/melremo_capture/                 iPhone + Mac MELRemo BLE capture helpers
+docs/                                  development log, protocol notes, troubleshooting
 ```
 
-说明：Home Assistant 内部 domain 仍保留为 `mitsubishi_matouch`，这是为了兼容原项目结构和 HA 配置入口；仓库名称和展示名称已改为 `Mitsubishi MELRemo PAR-40MAAC`。
+The internal Home Assistant domain remains `mitsubishi_matouch` for compatibility with the original integration and Home Assistant config flow. The repository and display name are changed to `Mitsubishi MELRemo PAR-40MAAC`.
 
-## 安装方式
+## Installation
 
-### 方式一：手动安装
+### Manual Install
 
-把 `custom_components/mitsubishi_matouch` 复制到 Home Assistant 配置目录：
+Copy the custom component into your Home Assistant config directory:
 
 ```bash
 cp -R custom_components/mitsubishi_matouch /config/custom_components/
 ```
 
-然后重启 Home Assistant。
+Then restart Home Assistant.
 
-### 方式二：HACS 自定义仓库
+### HACS Custom Repository
 
-在 HACS 中添加自定义仓库：
+Add this repository to HACS as a custom repository:
 
 ```text
 https://github.com/yewenkai/ha-mitsubishi-melremo-par40maac
 ```
 
-类别选择 `Integration`。
+Select `Integration` as the category.
 
-## 使用 ESPHome 蓝牙中继
+## ESPHome Bluetooth Proxy
 
-如果 Home Assistant 主机离空调面板较远，可以使用 ESP32-S3 作为 Bluetooth Proxy。
+If the Home Assistant host is not close enough to the air conditioner panel, use an ESP32-S3 as a Bluetooth Proxy.
 
-本项目提供示例：
+Examples are included:
 
 ```text
 esphome/esp32-s3-dongle.yaml
 esphome/secrets.yaml.example
 ```
 
-硬件可以选择常见的 ESP32-S3 Dongle 开发板，这类硬件可在淘宝购买。建议把 ESP32-S3 放在面板 0.5-1 米范围内，减少 BLE 建连失败。
+Common ESP32-S3 Dongle boards can be purchased from Taobao. Place the ESP32-S3 around 0.5-1 m from the panel when possible to reduce BLE connection failures.
 
-ESPHome 核心配置如下：
+The key ESPHome configuration is:
 
 ```yaml
 esp32_ble_tracker:
@@ -80,36 +92,43 @@ bluetooth_proxy:
   active: true
 ```
 
-固件编译和刷机可以走 ESPHome 官方推荐的 Docker / Dashboard 路径，也可以用 conda 创建本地虚拟环境后执行 `esphome compile` 和 `esphome upload`。详细步骤见 [ESPHome 配置说明](esphome/README.md) 和 [ESPHome 蓝牙中继说明](docs/ESPHome蓝牙中继.md)。
+Firmware compilation and flashing can use either the official Docker / ESPHome Dashboard path or a local conda virtual environment with `esphome compile` and `esphome upload`.
 
-不要把真实 `secrets.yaml` 提交到仓库。
+See:
 
-## 添加设备
+- [ESPHome firmware guide](esphome/README.md)
+- [ESPHome Bluetooth Proxy notes](docs/esphome-bluetooth-proxy.md)
+- [中文 ESPHome 固件说明](esphome/README-zh.md)
+- [中文 ESPHome 蓝牙中继说明](docs/esphome-bluetooth-proxy-zh.md)
 
-1. 关闭手机上的 MELRemo，避免同时连接面板。
-2. 在面板上显示当前 PIN。
-3. 确保面板处于主显示或状态显示。
-4. 在 Home Assistant 中添加 `Mitsubishi MELRemo PAR-40MAAC`。
-5. 选择或输入面板 MAC 地址。
-6. 输入当前 PIN。
+Do not commit a real `secrets.yaml` file.
 
-如果 PIN 改过，请以面板当前显示为准。
+## Add A Device
 
-## 已修复的关键协议问题
+1. Close MELRemo on your phone so it does not keep the panel connection.
+2. Show the current PIN on the panel.
+3. Keep the panel on its main or status screen.
+4. Add `Mitsubishi MELRemo PAR-40MAAC` in Home Assistant.
+5. Select or enter the panel MAC address.
+6. Enter the current PIN.
 
-原项目框架可复用，但在 `PAR-40MAAC` 实测中发现底层帧格式与代码不完全一致：
+If the PIN was changed, always use the PIN currently shown by the panel.
 
-- 帧长度为 16 位 little-endian。
-- 请求 message type 为 16 位 little-endian。
-- PIN 为 16 位 little-endian。
-- CRC/checksum 为 16 位求和 little-endian。
-- 状态响应、控制响应通过 notify 特征返回。
+## Key Protocol Fixes
 
-本项目据 MELRemo 抓包修正了这些差异。
+The original integration structure is reusable, but the tested `PAR-40MAAC` panel uses different low-level frame details:
 
-## 抓包与协议分析
+- Frame length is 16-bit little-endian.
+- Request message type is 16-bit little-endian.
+- PIN is 16-bit little-endian.
+- CRC/checksum is a 16-bit little-endian byte sum.
+- Status and control responses are returned through the notify characteristic.
 
-如果遇到未支持面板，可以用 iPhone + Mac 抓取 MELRemo 与面板的 BLE 通讯：
+These differences were fixed based on MELRemo BLE captures.
+
+## Capture And Protocol Analysis
+
+For unsupported panels, an iPhone and Mac can be used to capture BLE traffic between MELRemo and the panel:
 
 ```bash
 brew install libimobiledevice
@@ -118,18 +137,27 @@ tools/melremo_capture/extract_att.sh captures/melremo/example.pcap > captures/me
 tools/melremo_capture/decode_frames.py captures/melremo/att.tsv > captures/melremo/frames.txt
 ```
 
-注意：抓包文件可能包含设备地址、PIN 或其他隐私信息，默认不要公开上传。
+Capture files may contain device addresses, PINs, or other private data. Do not publish raw captures by default.
 
-## 排障要点
+See:
 
-- `ESP_GATT_CONN_FAIL_ESTABLISH` 通常是 BLE 建链失败，优先调整 ESP32-S3 与面板距离。
-- MELRemo 和 Home Assistant 不要同时连接面板。
-- 面板需要停留在主显示或状态显示。
-- 如果提示 PIN 错误，重新在面板上查看当前 PIN。
-- 如果能连接但不能控制，开启 `custom_components.mitsubishi_matouch` debug 日志并抓取 `SND` / `RCV`。
+- [Protocol notes](docs/protocol-notes.md)
+- [Development log](docs/development-log.md)
+- [MELRemo capture guide](tools/melremo_capture/README.md)
+- [中文协议笔记](docs/protocol-notes-zh.md)
+- [中文开发日志](docs/development-log-zh.md)
+- [中文抓包说明](tools/melremo_capture/README-zh.md)
 
-## 致谢与授权
+## Troubleshooting
 
-本项目基于 MIT 协议项目 [cyaneous/hass-mitsubishi_matouch](https://github.com/cyaneous/hass-mitsubishi_matouch) 修改而来，保留原项目授权声明。
+- `ESP_GATT_CONN_FAIL_ESTABLISH` usually means BLE connection establishment failed before the protocol layer. Move the ESP32-S3 closer to the panel first.
+- Do not keep MELRemo and Home Assistant connected to the panel at the same time.
+- Keep the panel on its main or status screen.
+- If the setup reports a PIN error, check the current PIN on the panel again.
+- If the integration connects but cannot control the unit, enable debug logging for `custom_components.mitsubishi_matouch` and inspect `SND` / `RCV` logs.
 
-感谢原作者提供 Home Assistant 集成框架、实体模型、蓝牙发现和控制结构。本项目主要补充 `PAR-40MAAC` / MELRemo 实测协议修正、ESPHome Bluetooth Proxy 使用说明和抓包工具。
+## Credits And License
+
+This project is derived from the MIT-licensed [cyaneous/hass-mitsubishi_matouch](https://github.com/cyaneous/hass-mitsubishi_matouch) project and preserves the original license notice.
+
+Thanks to the original author for the Home Assistant integration framework, entity model, Bluetooth discovery code, and MA Touch control model. This repository mainly adds `PAR-40MAAC` / MELRemo protocol fixes, ESPHome Bluetooth Proxy notes, capture helpers, and bilingual documentation.

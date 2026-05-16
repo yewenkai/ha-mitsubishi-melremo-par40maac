@@ -1,5 +1,7 @@
 # MELRemo / PAR-40MAAC 协议笔记
 
+[English](protocol-notes.md)
+
 这份笔记来自 `PAR-40MAAC` 面板与 iPhone MELRemo 的 BLE HCI 抓包，仅记录目前实现需要的部分。
 
 ## GATT
