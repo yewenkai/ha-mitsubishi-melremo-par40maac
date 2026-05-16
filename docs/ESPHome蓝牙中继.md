@@ -39,6 +39,51 @@ bluetooth_proxy:
   active: true
 ```
 
+## 编译和刷机路径
+
+可以走两条路径。
+
+### 官方推荐路径
+
+使用 Docker 或 ESPHome Dashboard：
+
+```bash
+docker compose -f esphome/docker-compose.esphome.linux.yml up -d
+```
+
+然后在 Dashboard 中编译、下载或刷入固件。
+
+### conda 本地路径
+
+如果不想使用 Docker，也可以用 conda 创建独立环境：
+
+```bash
+cd esphome
+conda create -n esphome python=3.12 -y
+conda activate esphome
+pip install esphome
+esphome config esp32-s3-dongle.yaml
+esphome compile esp32-s3-dongle.yaml
+```
+
+USB 刷机示例：
+
+```bash
+esphome upload esp32-s3-dongle.yaml --device /dev/ttyACM0
+```
+
+macOS 串口通常是：
+
+```bash
+esphome upload esp32-s3-dongle.yaml --device /dev/cu.usbmodemXXXX
+```
+
+首次刷机成功并接入 WiFi 后，后续可以直接 OTA：
+
+```bash
+esphome upload esp32-s3-dongle.yaml
+```
+
 ## Home Assistant
 
 ESPHome 设备上线后，Home Assistant 会发现一个远端蓝牙适配器。之后添加本项目集成时，HA 会通过这个 Bluetooth Proxy 连接面板。

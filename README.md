@@ -1,6 +1,6 @@
 # Mitsubishi MELRemo PAR-40MAAC for Home Assistant
 
-这是一个用于 Home Assistant 的三菱电机有线面板蓝牙控制实验项目，目标是通过 MELRemo 蓝牙协议控制空调。
+这是一个用于 Home Assistant 的三菱电机有线面板蓝牙控制实验项目，目标是通过 MELRemo（也常被写作 MEL Remo）蓝牙协议控制空调。
 
 本项目基于并借鉴了 [cyaneous/hass-mitsubishi_matouch](https://github.com/cyaneous/hass-mitsubishi_matouch) 的 Home Assistant 集成框架，在实际 `PAR-40MAAC` 面板和 MELRemo iPhone 抓包基础上修正了底层帧格式，使其可通过 Home Assistant + ESPHome Bluetooth Proxy 控制空调。
 
@@ -79,6 +79,8 @@ esp32_ble_tracker:
 bluetooth_proxy:
   active: true
 ```
+
+固件编译和刷机可以走 ESPHome 官方推荐的 Docker / Dashboard 路径，也可以用 conda 创建本地虚拟环境后执行 `esphome compile` 和 `esphome upload`。详细步骤见 [ESPHome 配置说明](esphome/README.md) 和 [ESPHome 蓝牙中继说明](docs/ESPHome蓝牙中继.md)。
 
 不要把真实 `secrets.yaml` 提交到仓库。
 
