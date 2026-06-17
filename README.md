@@ -126,6 +126,22 @@ After the air conditioner is available as a Home Assistant climate entity, it ca
 
 With the Home Assistant HomeKit Bridge integration, the air conditioner entity can be exposed to Apple Home. After that, Siri can be used for commands such as turning the air conditioner on or off, subject to how the entity is named and exposed in HomeKit Bridge.
 
+The Home Assistant climate entity supports setting the fan speed to `auto`, but the Apple Home app usually does not expose "auto fan speed" as a selectable option in its air-conditioner UI. If you want to trigger auto fan speed from Apple Home, create a Home Assistant script and expose that script through HomeKit Bridge as a scene or switch:
+
+```yaml
+script:
+  mitsubishi_set_auto_fan:
+    alias: Mitsubishi AC Auto Fan
+    sequence:
+      - service: climate.set_fan_mode
+        target:
+          entity_id: climate.mitsubishi_aircon
+        data:
+          fan_mode: auto
+```
+
+Replace `climate.mitsubishi_aircon` with your air-conditioner entity ID. Then include `script.mitsubishi_set_auto_fan` in HomeKit Bridge so Apple Home or Siri can indirectly set auto fan speed.
+
 If there is an Apple TV, HomePod, or similar Apple home hub in the home, the Apple Home app on iPhone can usually control the air conditioner remotely through Apple's HomeKit remote access. Another option is to expose Home Assistant securely to the internet, for example through a VPN, HTTPS reverse proxy, or another trusted remote access method, and then control the air conditioner through Home Assistant while away from home.
 
 Avoid exposing Home Assistant directly to the public internet without authentication, HTTPS, and proper network protection.
