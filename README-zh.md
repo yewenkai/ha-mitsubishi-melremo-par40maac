@@ -119,6 +119,22 @@ bluetooth_proxy:
 
 配合 Home Assistant 的 HomeKit Bridge 集成，可以把空调实体暴露到 Apple 家庭。之后就可以通过 Siri 执行类似“打开空调”“关闭空调”的语音控制，具体效果取决于实体名称和 HomeKit Bridge 中暴露的实体类型。
 
+Home Assistant 里的 climate 实体支持把风速设置为 `auto`，但 Apple 家庭 App 的空调控制界面通常不会把“自动风速”作为可选项显示出来。若需要在 Apple 家庭里一键触发自动风速，建议在 Home Assistant 中创建脚本，再把脚本通过 HomeKit Bridge 暴露成 Apple 家庭中的场景或开关：
+
+```yaml
+script:
+  mitsubishi_set_auto_fan:
+    alias: 三菱空调自动风速
+    sequence:
+      - service: climate.set_fan_mode
+        target:
+          entity_id: climate.mitsubishi_aircon
+        data:
+          fan_mode: auto
+```
+
+把 `climate.mitsubishi_aircon` 替换成你的空调实体 ID。之后在 HomeKit Bridge 中包含这个 `script.mitsubishi_set_auto_fan`，即可在 Apple 家庭中通过场景或 Siri 间接设置自动风速。
+
 如果家里有 Apple TV、HomePod 等 Apple 家庭中枢，iPhone 上的“家庭”App 通常可以通过 Apple 的 HomeKit 远程访问能力，在外面控制家中的空调。另一种方式是安全地把 Home Assistant 暴露到公网，例如通过 VPN、HTTPS 反向代理或其他可信远程访问方案，然后在外面通过 Home Assistant 控制空调。
 
 不要在缺少认证、HTTPS 和网络防护的情况下直接把 Home Assistant 暴露到公网。
