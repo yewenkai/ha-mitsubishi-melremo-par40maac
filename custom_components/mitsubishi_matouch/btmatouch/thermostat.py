@@ -299,6 +299,37 @@ class Thermostat:
             heat_setpoint=temperature
         )
 
+
+    def _control_flags_for_operation_mode(
+        self,
+        operation_mode: MAOperationMode,
+    ) -> _MAOperationModeFlags:
+        """Return control-request mode flags for the supplied operation mode."""
+
+        match operation_mode:
+            case MAOperationMode.AUTO:
+                return (
+                    _MAOperationModeFlags.POWER
+                    | _MAOperationModeFlags.AUTO
+                    | _MAOperationModeFlags.HEAT
+                    | _MAOperationModeFlags.COOL
+                    | _MAOperationModeFlags.DRY
+                )
+            case MAOperationMode.HEAT:
+                return _MAOperationModeFlags.POWER | _MAOperationModeFlags.HEAT
+            case MAOperationMode.COOL:
+                return _MAOperationModeFlags.POWER | _MAOperationModeFlags.COOL
+            case MAOperationMode.DRY:
+                return (
+                    _MAOperationModeFlags.POWER
+                    | _MAOperationModeFlags.HEAT
+                    | _MAOperationModeFlags.DRY
+                )
+            case MAOperationMode.FAN:
+                return _MAOperationModeFlags.POWER | _MAOperationModeFlags.FAN
+            case _:
+                return _MAOperationModeFlags.NONE
+
     async def async_set_operation_mode(self, operation_mode: MAOperationMode) -> None:
         """Set the operation mode.
 
@@ -325,32 +356,11 @@ class Thermostat:
                     operation_mode_flags=_MAOperationModeFlags.POWER|_MAOperationModeFlags.HEAT,
                 )
 
-        match operation_mode:
-            case MAOperationMode.AUTO:
-                await self._async_write_control_request(
-                    flags_a=0x02,
-                    operation_mode_flags=_MAOperationModeFlags.POWER|_MAOperationModeFlags.AUTO|_MAOperationModeFlags.HEAT|_MAOperationModeFlags.COOL|_MAOperationModeFlags.DRY,
-                )
-            case MAOperationMode.HEAT:
-                await self._async_write_control_request(
-                    flags_a=0x02,
-                    operation_mode_flags=_MAOperationModeFlags.POWER|_MAOperationModeFlags.HEAT
-                )
-            case MAOperationMode.COOL:
-                await self._async_write_control_request(
-                    flags_a=0x02,
-                    operation_mode_flags=_MAOperationModeFlags.POWER|_MAOperationModeFlags.COOL
-                )
-            case MAOperationMode.DRY:
-                await self._async_write_control_request(
-                    flags_a=0x02,
-                    operation_mode_flags=_MAOperationModeFlags.POWER|_MAOperationModeFlags.HEAT|_MAOperationModeFlags.DRY
-                )
-            case MAOperationMode.FAN:
-                await self._async_write_control_request(
-                    flags_a=0x02,
-                    operation_mode_flags=_MAOperationModeFlags.POWER|_MAOperationModeFlags.FAN
-                )
+        if operation_mode is not MAOperationMode.OFF:
+            await self._async_write_control_request(
+                flags_a=0x02,
+                operation_mode_flags=self._control_flags_for_operation_mode(operation_mode),
+            )
 
     async def async_set_fan_mode(self, fan_mode: MAFanMode) -> None:
         """Set the fan mode.
@@ -366,8 +376,11 @@ class Thermostat:
             MAResponseException: If the fan_mode is invalid.
         """
 
+        status = await self.async_get_status()
+
         await self._async_write_control_request(
             flags_c=0x01,
+            operation_mode_flags=self._control_flags_for_operation_mode(status.operation_mode),
             fan_mode=fan_mode
         )
 
